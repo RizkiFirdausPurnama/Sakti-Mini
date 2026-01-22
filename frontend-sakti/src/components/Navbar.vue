@@ -10,6 +10,7 @@
 
     <div v-if="isLoggedIn" class="hidden md:flex gap-8 text-gray-600 font-medium">
       <router-link to="/dashboard" class="hover:text-royal-blue transition">Dashboard</router-link>
+      <router-link to="/mahasiswa" class="hover:text-royal-blue transition">Data Mahasiswa</router-link>
       <a href="#" class="hover:text-royal-blue transition">Gallery</a>
       <a href="#" class="hover:text-royal-blue transition">Blogs</a>
     </div>

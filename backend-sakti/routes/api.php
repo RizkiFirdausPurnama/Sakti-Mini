@@ -3,24 +3,23 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\MahasiswaController; // <--- Import Controller
 
-// --- PUBLIC ROUTES ---
-
-// Register
+// Route Public (Login/Register)
 Route::post('/register', [AuthController::class, 'register']);
+Route::post('/login', [AuthController::class, 'login']);
 
-// Login dengan Rate Limiting (Maksimal 5x request per menit)
-// Middleware 'throttle:5,1' artinya: Max 5 hits dalam 1 menit.
-Route::middleware('throttle:5,1')->post('/login', [AuthController::class, 'login']);
-
-
-// --- PROTECTED ROUTES (Butuh Token) ---
+// Route Protected (Butuh Token)
 Route::middleware('auth:sanctum')->group(function () {
     
-    // Logout
+    // Auth User Info
+    Route::get('/user', function (Request $request) {
+        return $request->user();
+    });
     Route::post('/logout', [AuthController::class, 'logout']);
-    
-    // Profile
-    Route::get('/profile', [AuthController::class, 'profile']);
+
+    // --- MODULE MAHASISWA ---
+    // apiResource otomatis membuat route: index, store, show, update, destroy
+    Route::apiResource('mahasiswas', MahasiswaController::class);
     
 });

@@ -3,6 +3,9 @@ import Landing from '../views/Landing.vue'
 import Login from '../views/Login.vue'
 import Register from '../views/Register.vue'
 import Dashboard from '../views/Dashboard.vue'
+// Import Component Mahasiswa
+import MahasiswaIndex from '../views/mahasiswa/MahasiswaIndex.vue'
+import MahasiswaForm from '../views/mahasiswa/MahasiswaForm.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -11,26 +14,37 @@ const router = createRouter({
     { path: '/login', name: 'login', component: Login },
     { path: '/register', name: 'register', component: Register },
     { path: '/dashboard', name: 'dashboard', component: Dashboard, meta: { requiresAuth: true } },
+    
+    // --- MODULE MAHASISWA ---
+    { 
+      path: '/mahasiswa', 
+      name: 'mahasiswa.index', 
+      component: MahasiswaIndex, 
+      meta: { requiresAuth: true } 
+    },
+    { 
+      path: '/mahasiswa/create', 
+      name: 'mahasiswa.create', 
+      component: MahasiswaForm, 
+      meta: { requiresAuth: true } 
+    },
+    { 
+      path: '/mahasiswa/:id/edit', 
+      name: 'mahasiswa.edit', 
+      component: MahasiswaForm, 
+      meta: { requiresAuth: true } 
+    },
   ]
 })
 
-// --- SCRIPT PENGAMAN (Route Guard) ---
+// ... (Route Guard tetap sama seperti sebelumnya) ...
 router.beforeEach((to, from, next) => {
   const token = localStorage.getItem('token');
-
-  // 1. Kalau mau masuk Dashboard tapi TIDAK punya token -> Tendang ke Login
   if (to.meta.requiresAuth && !token) {
     next('/login');
-  } 
-  
-  // 2. Kalau mau masuk Login/Register ATAU Landing Page ('/') tapi PUNYA token -> Paksa ke Dashboard
-  // (Disini logika yang membuat Landing Page tidak bisa dibuka kalau sudah login)
-  else if ((to.name === 'login' || to.name === 'register' || to.path === '/') && token) {
+  } else if ((to.name === 'login' || to.name === 'register' || to.path === '/') && token) {
     next('/dashboard');
-  } 
-  
-  // 3. Aman, silakan lewat
-  else {
+  } else {
     next();
   }
 });
